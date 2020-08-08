@@ -6,6 +6,10 @@ python:
 services:
   - docker
 
+env:
+  global:
+    - SHA=$(git rev-parse HEAD)
+
 before_script: pip install docker-compose
 
 before_install:
