@@ -25,7 +25,7 @@ SECRET_KEY = 'nabyniq^4ku+)j5jf77dzu2ztq^$ysgms(y13rydtq)*00fpbu'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'dream-broker-api.herokuapp.com']
 
 
 # Application definition

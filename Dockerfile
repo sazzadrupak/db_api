@@ -1,7 +1,10 @@
 FROM python:3.7-alpine
 MAINTAINER Md Sazzad Ul Islam
 
-ENV PYTHONUNBUFFERED 1
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1 #Prevents Python from writing pyc files to disc
+ENV PYTHONUNBUFFERED 1 #Prevents Python from buffering stdout and stderr
+ENV DEBUG 0
 
 COPY ./requirements.txt /requirements.txt
 
@@ -14,3 +17,5 @@ RUN apk del .tmp-build-deps
 RUN mkdir /app
 WORKDIR /app
 COPY ./app /app
+
+CMD gunicorn app.wsgi:application --bind 0.0.0.0:$PORT
