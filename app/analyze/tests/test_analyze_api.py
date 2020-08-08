@@ -96,14 +96,21 @@ class AnalyzeApiTest(TestCase):
         self.assertEqual(response.data['text'][0], 'Not a valid string.')
 
     def test_text_key_value_empty_string(self):
-        """8. Payload key 'text' value empty string, api returns 400"""
+        """8. Payload key 'text' value empty string, api returns 200"""
         payload = {'text': ""}
         response = self.client.post(ANALYZE_URL, data=payload, format='json',
                                     content_type='application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('text', response.data.keys())
-        self.assertEqual(response.data['text'][0],
-                         'This field may not be blank.')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        expected_response = {
+            'textLength':
+                {
+                    'withSpaces': 0,
+                    'withoutSpaces': 0
+                },
+            'wordCount': 0,
+            'characterCount': []
+        }
+        self.assertEqual(expected_response, response.data)
 
     def test_analyze_payload_one_number(self):
         """9. Payload key 'text' has value number without space,
@@ -252,4 +259,39 @@ class AnalyzeApiTest(TestCase):
             "characterCount": []
         }
 
+        self.assertEqual(expected_response, response.data)
+
+    def test_text_key_value_with_long_string(self):
+        """17. Payload key 'text' value a long string,
+        api returns 200"""
+        payload = {'text': "Idrajuv su biege uz ped suoruwuj ma ezadifa"
+                           "vo obpe ikopi poko ujpuw kida ho. Bi nipi"
+                           "fivim cagjo as am ofuzot luska on awhag"
+                           "negeta ze vuz je izuje wovude zupigew."
+                           "Vudu bimseko poedi ojjohu mu le naew uftios"
+                           "nel ikmahec lijharuc lu jot parzonej kitma"
+                           "kuki acizoc sucusba. Nukwifu zaodewe et"
+                           "toflilbug hirun guv innezhic cigo zonoan"
+                           "col nuw vibsod jab caehu nub mos. Dev poba"
+                           "ep ra duloj ekaunapu ma eful oloazla tabwas"
+                           "emuteer puuhu barnic bi ife rinlesgup von."
+                           "Taasatif atovo lehedel gatoka da re ba"
+                           "uk cevtomo sic folilo eje fidufbis nav."}
+        response = self.client.post(ANALYZE_URL, data=payload, format='json',
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        expected_response = {
+            'textLength': {
+                'withSpaces': 529,
+                'withoutSpaces': 445
+            },
+            'wordCount': 85,
+            'characterCount': [
+                {'a': 42}, {'b': 15}, {'c': 13}, {'d': 14}, {'e': 40},
+                {'f': 12}, {'g': 10}, {'h': 10}, {'i': 37}, {'j': 14},
+                {'k': 13}, {'l': 17}, {'m': 11}, {'n': 19}, {'o': 40},
+                {'p': 14}, {'r': 10}, {'s': 15}, {'t': 14}, {'u': 43},
+                {'v': 13}, {'w': 10}, {'z': 13}]
+        }
         self.assertEqual(expected_response, response.data)
