@@ -25,16 +25,17 @@ def analyze_data(request):
     serializer = AnalyzeSerializer(data=request.data)
     if serializer.is_valid():
         payload = serializer.data['text']
-        with_space = len(payload)
+        with_space_len = len(payload)
         with_out_space = "".join(payload.split()).lower()
+        only_characters = ''.join(filter(str.isalpha, with_out_space))
 
         result = {
             "textLength": {
-                "withSpaces": with_space,
+                "withSpaces": with_space_len,
                 "withoutSpaces": len(with_out_space),
             },
             "wordCount": len(payload.split()),
-            "characterCount": characters_count(with_out_space),
+            "characterCount": characters_count(only_characters),
         }
         return Response(result, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

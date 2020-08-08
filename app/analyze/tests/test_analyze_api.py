@@ -204,8 +204,38 @@ class AnalyzeApiTest(TestCase):
 
         self.assertEqual(expected_response, response.data)
 
-    def test_text_key_value_spacial_character(self):
+    def test_text_key_value_with_spacial_character(self):
         """15. Payload key 'text' value string with special character,
+        api returns 200"""
+        payload = {'text': "#& special character #%"}
+        response = self.client.post(ANALYZE_URL, data=payload, format='json',
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        expected_response = {
+            "textLength":
+                {
+                    "withSpaces": 23,
+                    "withoutSpaces": 20
+                },
+            "wordCount": 4,
+            "characterCount": [
+                {'a': 3},
+                {'c': 3},
+                {'e': 2},
+                {'h': 1},
+                {'i': 1},
+                {'l': 1},
+                {'p': 1},
+                {'r': 2},
+                {'s': 1},
+                {'t': 1}]
+        }
+
+        self.assertEqual(expected_response, response.data)
+
+    def test_text_key_value_spacial_character(self):
+        """16. Payload key 'text' value string only special character,
         api returns 200"""
         payload = {'text': "#&/?"}
         response = self.client.post(ANALYZE_URL, data=payload, format='json',
@@ -219,11 +249,7 @@ class AnalyzeApiTest(TestCase):
                     "withoutSpaces": 4
                 },
             "wordCount": 1,
-            "characterCount": [
-                {"#": 1},
-                {"&": 1},
-                {"/": 1},
-                {"?": 1}]
+            "characterCount": []
         }
 
         self.assertEqual(expected_response, response.data)
