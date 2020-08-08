@@ -8,10 +8,23 @@ services:
 
 before_script: pip install docker-compose
 
+before_install:
+  - wget -qO- https://toolbelt.heroku.com/install.sh | sh
+
 script:
   - docker-compose run app sh -c "python manage.py test && flake8"
 
 after_success:
   - docker build -t rupak08012/analyze_string ./
+  - docker tag rupak08012/analyze_string registry.heroku.com/$HEROKU_APP_NAME/web
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  - docker push rupak08012/analyze_string
+  - echo "$HEROKU_PASSWORD" | docker login -u "$HEROKU_USERNAME" --password-stdin registry.heroku.com
+
+deploy:
+  provider: script
+  script:
+    docker push rupak08012/analyze_string;
+    docker push registry.heroku.com/$HEROKU_APP_NAME/web;
+    heroku container:release web --app $HEROKU_APP_NAME
+  on:
+    branch: master
