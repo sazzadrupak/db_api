@@ -8,15 +8,14 @@ def characters_count(string):
     """Count only the characters (not numbers)
     occurrences in the string"""
     result = []
-    sorted_string_without_space = sorted(string)
-    modified_string = ''.join([i for i in sorted_string_without_space
-                               if not i.isdigit()])
-    unique_characters = set()
-    if modified_string:
-        for c in modified_string:
+    if string:
+        sorted_string = sorted(string)
+
+        unique_characters = set()
+        for c in sorted_string:
             if c not in unique_characters:
                 unique_characters.add(c)
-                result.append({c: modified_string.count(c)})
+                result.append({c: sorted_string.count(c)})
     return result
 
 
