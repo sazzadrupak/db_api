@@ -4,18 +4,15 @@ from rest_framework.response import Response
 from .serializers import AnalyzeSerializer
 
 
-def characters_count(string):
+def characters_count(sorted_string):
     """Count only the characters (not numbers)
     occurrences in the string"""
     result = []
-    if string:
-        sorted_string = sorted(string)
-
-        unique_characters = set()
-        for c in sorted_string:
-            if c not in unique_characters:
-                unique_characters.add(c)
-                result.append({c: sorted_string.count(c)})
+    if sorted_string:
+        unique_characters = set(sorted_string)
+        unique_characters = sorted(unique_characters)
+        for c in unique_characters:
+            result.append({c: sorted_string.count(c)})
     return result
 
 

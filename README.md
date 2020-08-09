@@ -3,10 +3,10 @@ This is a sample django rest api project. This app provides only one api and it 
 Travis CI has been used to manage the CI/CD pipeline and the whole project is deployed to heroku cloud server.
 
 ## Run the project locally
-1. Go inside the project's root directory
+1. Go inside the project's root directory where docker-compose.yml is. 
 2. Run the app with the following command:
 ```
-docker-compose up --
+docker-compose up --build
 ```
 To test the api, use postman.
 The API is http://localhost:8000/analyze. Use post method and in body, give the payload like this:
@@ -51,7 +51,7 @@ The response for this payload will be:
 }
 ```
 ## Test case
-To run the test cases in docker container, just run the following command in terminal (inside project root directory)
+To run the api test cases and linting test in docker container, just run the following command in terminal (inside project root directory)
 ```
 docker-compose run app sh -c "python manage.py test && flake8"
 ```
@@ -62,7 +62,7 @@ linting tool has been used.
 ## CI/CD
 The following steps are applied to build the CI/CD pipeline.
 1. Commit to the project repo.
-2. Travis ci will run the test first.
+2. Travis ci will run the api test first and lint test last.
 3. After successful test run, Travis CI build image and deploy the image to docker hub account and registry.heroku.com.
 4. Finally the project is deployed into heroku cloud.
 
